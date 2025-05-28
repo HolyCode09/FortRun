@@ -24,8 +24,8 @@ def load_font(path, size):
 
 # Images
 run_bg = load_img("pics/Run_Screen_Background.jpg", (1080,520))
-paths_img = load_img("pics/paths.png", (595,520))
-paths_img2 = load_img("pics/paths.png", (600,520))
+paths_img = load_img("pics/paths1.png", (595,520))
+paths_img2 = load_img("pics/paths2.png", (600,520))
 player1_img = load_img("pics/Runner1.png", (130,170))
 player2_img = load_img("pics/Runner2.png", (130,170))
 before_run_window = load_img("pics/beforeRunPage.png", (1080,500))
