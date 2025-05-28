@@ -45,6 +45,7 @@ def beforeRun():
 
 def runScreen(gen):
     global y_1, y_2, lives, matsSpawned, matsCount
+    foodCount = 0  # Add this line at the start of runScreen
     go_sound.play()
     bgMusic = bg_run_music
     bgMusic.play(-1)
@@ -53,6 +54,11 @@ def runScreen(gen):
     hitSound = hit_sound
     font = get_font(50)
     item_images = [
+        (load_img("pics/needs/life/heart.png", (120,120)), "life"),
+        (load_img("pics/needs/life/heart.png", (120,120)), "life"),
+        (load_img("pics/needs/life/heart.png", (120,120)), "life"),
+        (load_img("pics/needs/life/heart.png", (120,120)), "life"),
+        (load_img("pics/needs/life/heart.png", (120,120)), "life"),
         (load_img("pics/needs/life/food1.png", (120,120)), "food"),
         (load_img("pics/needs/life/food2.png", (120,120)), "food"),
         (load_img("pics/needs/life/food3.png", (120,120)), "food"),
@@ -78,11 +84,23 @@ def runScreen(gen):
     add_interval = 1000
     last_add_time = 0
 
+    def has_mats_on_screen():
+        return any(item[2][1] == "mats" for item in items_pos)
+
+    def has_hearts_on_screen():
+        return any(item[2][1] == "life" for item in items_pos)
+
     def add_new_item():
         global matsSpawned
         item_x = random.choice([300,495,690])
         item_y = -100
         item_image = random.choice(item_images)
+        if item_image[1] == "life" and (lives == 3 or has_hearts_on_screen()):
+            add_new_item()
+            return
+        if item_image[1] == "mats" and has_mats_on_screen():
+            add_new_item()
+            return
         items_pos.append((item_x, item_y, item_image))
         if item_image[1] == "mats":
             matsSpawned += 1
@@ -100,6 +118,7 @@ def runScreen(gen):
 
     def colideHappen(rightX):
         global lives, matsCount
+        nonlocal foodCount  # Add this line
         for item in items_pos:
             if item[0] == rightX and item[1] < 480 and item[1] > 520 - 250:
                 items_pos.remove(item)
@@ -109,9 +128,12 @@ def runScreen(gen):
                 if item[2][1] == "obs":
                     hitSound.play()
                     lives-=1
-                if item[2][1] == "food" and lives<3:
+                if item[2][1] == "life":
                     collectSound.play()
                     lives+=1
+                if item[2][1] == "food":
+                    collectSound.play()
+                    foodCount+=1
 
     while True:
         time+=1
@@ -121,8 +143,11 @@ def runScreen(gen):
         screen.blit(paths2,(257,y_2))
         needs = font.render(f"10/{matsCount} םירמוח", True, "white")
         livesCheck = font.render(f"{lives} :םייח רפסמ", True, "white")
-        screen.blit(needs, (750,0))
+        foodCheck = font.render(f"{foodCount} :הייחמ יבאשמ", True, "white")
+        food_x = 690 if foodCount < 10 else 670
+        screen.blit(needs, (760,0))
         screen.blit(livesCheck, (750,50))
+        screen.blit(foodCheck, (food_x,100))
         y_1+=2
         y_2+=2
         if y_1>=520:
@@ -160,7 +185,7 @@ def runScreen(gen):
         for i in range(len(items_pos)):
             items_pos[i] = (items_pos[i][0], items_pos[i][1] + 2, items_pos[i][2])
         items_pos = [item for item in items_pos if item[1] < 520]
-        if matsSpawned<12:
+        if matsSpawned<11:
             for pos in items_pos:
                 screen.blit(pos[2][0], (pos[0], pos[1]))
         else:
