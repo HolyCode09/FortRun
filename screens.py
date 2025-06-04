@@ -6,6 +6,8 @@ from assets import (
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
+import pygame_widgets
+from pygame_widgets.slider import Slider
 import pygame
 import random
 
@@ -17,31 +19,57 @@ def game_over_screen():
     pygame.time.delay(4000)
     exit_game()
 
-def beforeRun():
-    font = get_font(50)
-    runBackground1 = run_bg
-    paths1 = paths_img
-    screen.blit(runBackground1,(0,0))
-    screen.blit(paths1,(260,0))
-    window = before_run_window
-    screen.blit(window, (0,0))
-    btn0 = pygame.draw.rect(screen, "orange", (300,380, 200,50),0,100)
-    btn1 = pygame.draw.rect(screen, "orange", (580,380, 200,50),0,100)
-    textBoy = font.render("ןב", True, "white")
-    textGirl = font.render("תב", True, "white")
-    screen.blit(textBoy, (370,380))
-    screen.blit(textGirl, (650,380))
+def settings_screen():
+    # Create widgets once, outside the loop
+    slider = Slider(screen, 100, 100, 800, 40, min=0, max=100, step=1, initial=100, colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0))
     while True:
-        for event in pygame.event.get():
+        screen.fill("black")
+        
+        # Draw static elements first
+        font = get_font(50)
+        settingsText = font.render("תורדגה", True, "white")
+        screen.blit(settingsText, (440, 10))
+        
+        # Handle events
+        events = pygame.event.get()
+        for event in events:
             if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                if btn0.collidepoint(mouse_pos):
-                    runScreen(0)
-                if btn1.collidepoint(mouse_pos):
-                    runScreen(1)
+                exit_game()
+        
+        # Update widget value
+        
+        # Update widgets last
+        pygame_widgets.update(events)
         pygame.display.flip()
+        
+        # Control frame rate
+        clock.tick(60)  # 60 FPS
+
+# def beforeRun():
+    # font = get_font(50)
+    # runBackground1 = run_bg
+    # paths1 = paths_img
+    # screen.blit(runBackground1,(0,0))
+    # screen.blit(paths1,(260,0))
+    # window = before_run_window
+    # screen.blit(window, (0,0))
+    # btn0 = pygame.draw.rect(screen, "orange", (300,380, 200,50),0,100)
+    # btn1 = pygame.draw.rect(screen, "orange", (580,380, 200,50),0,100)
+    # textBoy = font.render("ןב", True, "white")
+    # textGirl = font.render("תב", True, "white")
+    # screen.blit(textBoy, (370,380))
+    # screen.blit(textGirl, (650,380))
+    # while True:
+    #     for event in pygame.event.get():
+    #         if event.type == pygame.QUIT:
+    #             pygame.quit()
+    #         if event.type == pygame.MOUSEBUTTONDOWN:
+    #             mouse_pos = pygame.mouse.get_pos()
+    #             if btn0.collidepoint(mouse_pos):
+    #                 runScreen(0)
+    #             if btn1.collidepoint(mouse_pos):
+    #                 runScreen(1)
+    #     pygame.display.flip()
 
 def runScreen(gen):
     global y_1, y_2, lives, matsSpawned, matsCount
@@ -281,5 +309,5 @@ def startScreen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btnRect.collidepoint(event.pos):
                     bgMuisc.stop()
-                    beforeRun()
+                    settings_screen()
         pygame.display.flip()
