@@ -20,30 +20,46 @@ def game_over_screen():
     exit_game()
 
 def settings_screen():
-    # Create widgets once, outside the loop
-    slider = Slider(screen, 100, 100, 800, 40, min=0, max=100, step=1, initial=100, colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0))
+
+    screen.fill((255, 95, 31))
+    brickWall_img = load_img("pics/BrickWall.png", (1130,600))
+    screen.blit(brickWall_img, (-20, -50))
+    
+    woodSign = load_img("pics/WoodSign.png", (300, 100))
+    screen.blit(woodSign, (380, 20))
+
+    soundSlider = Slider(
+        screen,
+        250, 200, 100, 10,
+        min=0, max=100,
+        step=1, initial=100,
+        colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0)
+    )
+    musicSlider = Slider(
+        screen,
+        1080-450, 200, 100, 10,
+        min=0, max=100,
+        step=1, initial=100,
+        colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0)
+    )
+    
+    font = get_font(50)
+    settingsText = font.render("תורדגה", True, "brown")
+    screen.blit(settingsText, (440, 60))
+    
     while True:
-        screen.fill("black")
-        
-        # Draw static elements first
-        font = get_font(50)
-        settingsText = font.render("תורדגה", True, "white")
-        screen.blit(settingsText, (440, 10))
-        
+        print(musicSlider.getValue())
+        start_music.set_volume(musicSlider.getValue() / 100)
         # Handle events
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 exit_game()
         
-        # Update widget value
-        
-        # Update widgets last
+
         pygame_widgets.update(events)
         pygame.display.flip()
-        
-        # Control frame rate
-        clock.tick(60)  # 60 FPS
+
 
 # def beforeRun():
     # font = get_font(50)
@@ -308,6 +324,6 @@ def startScreen():
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btnRect.collidepoint(event.pos):
-                    bgMuisc.stop()
+                    # bgMuisc.stop()
                     settings_screen()
         pygame.display.flip()
