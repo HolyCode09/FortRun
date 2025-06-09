@@ -2,7 +2,7 @@
 from assets import (
     screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, select_sound, forNow, get_font, load_img, soundsVol
+    start_bg, fortress_bg, dust_img, start_music, select_sound, goBack, get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -21,11 +21,18 @@ def game_over_screen():
     pygame.time.delay(4000)
     exit_game()
 
+soundsVolume = musicVolume = 100
+gen = "boy"
+place = 0
+
 def settings_screen():
+    global soundsVolume, musicVolume, gen, place
 
     screen.fill((255, 191, 0))
     brickWall_img = load_img("pics/BrickWall.png", (1130,600))
     screen.blit(brickWall_img, (-20, -50))
+
+    screen.blit(goBack, (20, 20))
     
     woodSign = load_img("pics/WoodSign.png", (300, 100))
     screen.blit(woodSign, (380, 20))
@@ -41,7 +48,7 @@ def settings_screen():
         screen,
         310, 150, 100, 10,
         min=0, max=100,
-        step=1, initial=100,
+        step=1, initial=soundsVolume,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     font2 = get_font(20)    
@@ -52,7 +59,7 @@ def settings_screen():
         screen,
         310, 180, 100, 10,
         min=0, max=100,
-        step=1, initial=100,
+        step=1, initial=musicVolume,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     soundsText = font2.render("הקיסומ", True, (255, 191, 0))
@@ -78,7 +85,6 @@ def settings_screen():
         forNow1,
         forNow2,
     ]
-    place = 0
     screen.blit(maps[place], (288, 219))
     arrowLeft = font1.render("<", True, (255, 191, 0))
     arrowRight = font1.render(">", True, (255, 191, 0))
@@ -88,21 +94,34 @@ def settings_screen():
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
         soundsVol(musicSlider.getValue() / 100, "music")
+        soundsVolume = soundSlider.getValue()
+        musicVolume = musicSlider.getValue()
         # Handle events
+        if gen == "boy":
+            pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
+            pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+        else:
+            pygame.draw.rect(screen, "black", (500, 150, 110, 150), 2, 5)
+            pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 2, 5)
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
                 exit_game()
+            mouse_pos = pygame.mouse.get_pos()
+            if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    select_sound.play()
+                    startScreen()
+            else:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
             if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
                 if boyRect.collidepoint(mouse_pos):
                     select_sound.play()
-                    pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
-                    pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+                    gen = "boy"
                 elif girlRect.collidepoint(mouse_pos):
                     select_sound.play()
-                    pygame.draw.rect(screen, "black", (500, 150, 110, 150), 2, 5)
-                    pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 2, 5)
+                    gen = "girl"
                 elif arrowLeft.get_rect(topleft=(249, 235)).collidepoint(mouse_pos):
                     select_sound.play()
                     screen.blit(font1.render("<", True, "red"), (249, 235))
@@ -362,8 +381,6 @@ btnRect = pygame.Rect(400,350, 300,100)
 def startScreen():
     startBackground = start_bg
     screen.blit(startBackground,(0,0))
-    bgMuisc = start_music
-    bgMuisc.play(-1)
     font1 = get_font(50)
     font2Border = get_font(155)
     font2 = get_font(150)
