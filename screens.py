@@ -2,7 +2,7 @@
 from assets import (
     screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, get_font, load_img, soundsVol
+    start_bg, fortress_bg, dust_img, start_music, select_sound, get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -37,22 +37,25 @@ def settings_screen():
     
     soundSlider = Slider(
         screen,
-        250, 200, 100, 10,
+        300, 200, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     font2 = get_font(20)    
     soundsText = font2.render("םילילצ", True, (255, 191, 0))
-    screen.blit(soundsText, (250, 100))
+    screen.blit(soundsText, (220, 195))
 
     musicSlider = Slider(
         screen,
-        1080-450, 200, 100, 10,
+        300, 230, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
+    soundsText = font2.render("הקיסומ", True, (255, 191, 0))
+    screen.blit(soundsText, (220, 225))
+
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
         soundsVol(musicSlider.getValue() / 100, "music")
@@ -331,5 +334,6 @@ def startScreen():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if btnRect.collidepoint(event.pos):
                     # bgMuisc.stop()
+                    select_sound.play()
                     settings_screen()
         pygame.display.flip()

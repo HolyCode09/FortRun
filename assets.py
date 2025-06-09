@@ -54,6 +54,7 @@ drama_sound = load_sound("sounds/Enough_Mats_Check.mp3")
 win_sound = load_sound("sounds/Win_Sound.mp3")
 build_sound = load_sound("sounds/Building_Sound.mp3")
 start_music = load_sound("sounds/Start_Screen_Background_Muisc.mp3")
+select_sound = load_sound("sounds/select.mp3")
 
 sounds = [
     (go_sound, "sound"),
@@ -64,7 +65,8 @@ sounds = [
     (drama_sound, "sound"),
     (win_sound, "sound"),
     (build_sound, "sound"),
-    (start_music, "music")
+    (start_music, "music"),
+    (select_sound, "sound")
 ]
 
 # Fonts
