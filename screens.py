@@ -35,26 +35,40 @@ def settings_screen():
     settingsText = font1.render("תורדגה", True, "brown")
     screen.blit(settingsText, (440, 60))
     
+    pygame.draw.rect(screen, (255, 191, 0), (215, 140, 200, 65), 4, 5)
+    
     soundSlider = Slider(
         screen,
-        300, 200, 100, 10,
+        300, 150, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     font2 = get_font(20)    
     soundsText = font2.render("םילילצ", True, (255, 191, 0))
-    screen.blit(soundsText, (220, 195))
+    screen.blit(soundsText, (220, 145))
 
     musicSlider = Slider(
         screen,
-        300, 230, 100, 10,
+        300, 180, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     soundsText = font2.render("הקיסומ", True, (255, 191, 0))
-    screen.blit(soundsText, (220, 225))
+    screen.blit(soundsText, (220, 175))
+
+
+    pygame.draw.rect(screen, (255, 191, 0), (430, 140, 440, 170), 4, 5)
+
+    boy = load_img("pics/Runner1.png", (105, 145))
+    girl = load_img("pics/Runner2.png", (110, 150))
+    screen.blit(boy, (500, 150))
+    screen.blit(girl, (670, 150))
+
+    boyRect = pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
+    girlRect = pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+
 
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
@@ -64,6 +78,16 @@ def settings_screen():
         for event in events:
             if event.type == pygame.QUIT:
                 exit_game()
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                mouse_pos = pygame.mouse.get_pos()
+                if boyRect.collidepoint(mouse_pos):
+                    select_sound.play()
+                    pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
+                    pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+                elif girlRect.collidepoint(mouse_pos):
+                    select_sound.play()
+                    pygame.draw.rect(screen, "black", (500, 150, 110, 150), 2, 5)
+                    pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 2, 5)
         
 
         pygame_widgets.update(events)
