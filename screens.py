@@ -2,7 +2,7 @@
 from assets import (
     screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, get_font, load_img
+    start_bg, fortress_bg, dust_img, start_music, get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -10,6 +10,8 @@ import pygame_widgets
 from pygame_widgets.slider import Slider
 import pygame
 import random
+
+
 
 def game_over_screen():
     font = get_font(300)
@@ -21,35 +23,39 @@ def game_over_screen():
 
 def settings_screen():
 
-    screen.fill((255, 95, 31))
+    screen.fill((255, 191, 0))
     brickWall_img = load_img("pics/BrickWall.png", (1130,600))
     screen.blit(brickWall_img, (-20, -50))
     
     woodSign = load_img("pics/WoodSign.png", (300, 100))
     screen.blit(woodSign, (380, 20))
 
+    
+    font1 = get_font(50)
+    settingsText = font1.render("תורדגה", True, "brown")
+    screen.blit(settingsText, (440, 60))
+    
     soundSlider = Slider(
         screen,
         250, 200, 100, 10,
         min=0, max=100,
         step=1, initial=100,
-        colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0)
+        colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
+    font2 = get_font(20)    
+    soundsText = font2.render("םילילצ", True, (255, 191, 0))
+    screen.blit(soundsText, (250, 100))
+
     musicSlider = Slider(
         screen,
         1080-450, 200, 100, 10,
         min=0, max=100,
         step=1, initial=100,
-        colour=(255, 255, 255), handleColour=(255,0,0), valueColour=(255, 165, 0)
+        colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
-    
-    font = get_font(50)
-    settingsText = font.render("תורדגה", True, "brown")
-    screen.blit(settingsText, (440, 60))
-    
     while True:
-        print(musicSlider.getValue())
-        start_music.set_volume(musicSlider.getValue() / 100)
+        soundsVol(soundSlider.getValue() / 100, "sound")
+        soundsVol(musicSlider.getValue() / 100, "music")
         # Handle events
         events = pygame.event.get()
         for event in events:
