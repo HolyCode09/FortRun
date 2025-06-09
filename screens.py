@@ -2,7 +2,7 @@
 from assets import (
     screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, select_sound, get_font, load_img, soundsVol
+    start_bg, fortress_bg, dust_img, start_music, select_sound, forNow, get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -35,28 +35,28 @@ def settings_screen():
     settingsText = font1.render("תורדגה", True, "brown")
     screen.blit(settingsText, (440, 60))
     
-    pygame.draw.rect(screen, (255, 191, 0), (215, 140, 200, 65), 4, 5)
+    pygame.draw.rect(screen, (255, 191, 0), (225, 140, 200, 65), 4, 5)
     
     soundSlider = Slider(
         screen,
-        300, 150, 100, 10,
+        310, 150, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     font2 = get_font(20)    
     soundsText = font2.render("םילילצ", True, (255, 191, 0))
-    screen.blit(soundsText, (220, 145))
+    screen.blit(soundsText, (230, 145))
 
     musicSlider = Slider(
         screen,
-        300, 180, 100, 10,
+        310, 180, 100, 10,
         min=0, max=100,
         step=1, initial=100,
         colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
     )
     soundsText = font2.render("הקיסומ", True, (255, 191, 0))
-    screen.blit(soundsText, (220, 175))
+    screen.blit(soundsText, (230, 175))
 
 
     pygame.draw.rect(screen, (255, 191, 0), (430, 140, 440, 170), 4, 5)
@@ -69,6 +69,21 @@ def settings_screen():
     boyRect = pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
     girlRect = pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
 
+    pygame.draw.rect(screen, (255, 191, 0), (225, 210, 200, 100), 4, 5)
+
+    pygame.draw.rect(screen, "black", (284, 215, 90, 90), 4, 5)
+    forNow1 = load_img("pics/maps/forNow.png", (82, 82))
+    forNow2 = load_img("pics/maps/forNow2.png", (82, 82))
+    maps = [
+        forNow1,
+        forNow2,
+    ]
+    place = 0
+    screen.blit(maps[place], (288, 219))
+    arrowLeft = font1.render("<", True, (255, 191, 0))
+    arrowRight = font1.render(">", True, (255, 191, 0))
+    screen.blit(arrowLeft, (249, 235))
+    screen.blit(arrowRight, (380, 235))
 
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
@@ -88,6 +103,23 @@ def settings_screen():
                     select_sound.play()
                     pygame.draw.rect(screen, "black", (500, 150, 110, 150), 2, 5)
                     pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 2, 5)
+                elif arrowLeft.get_rect(topleft=(249, 235)).collidepoint(mouse_pos):
+                    select_sound.play()
+                    screen.blit(font1.render("<", True, "red"), (249, 235))
+                    place -= 1
+                    if place < 0:
+                        place = len(maps) - 1
+                    screen.blit(maps[place], (288, 219))
+                elif arrowRight.get_rect(topleft=(380, 235)).collidepoint(mouse_pos):
+                    select_sound.play()
+                    screen.blit(font1.render(">", True, "red"), (380, 235))
+                    place += 1
+                    if place >= len(maps):
+                        place = 0
+                    screen.blit(maps[place], (288, 219))
+            if event.type == pygame.MOUSEBUTTONUP:
+                screen.blit(font1.render("<", True, (255, 191, 0)), (249, 235))
+                screen.blit(font1.render(">", True, (255, 191, 0)), (380, 235))
         
 
         pygame_widgets.update(events)

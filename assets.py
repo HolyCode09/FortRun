@@ -42,6 +42,7 @@ before_run_window = load_img("pics/beforeRunPage.png", (1080,500))
 start_bg = load_img("pics/Start_Screen_Background.jpg", (1080,520))
 fortress_bg = load_img("pics/Fortres_Background.jpg", (1080,520))
 dust_img = load_img("pics/Bluilding_Dust.png", (600,600))
+forNow = load_img("pics/maps/forNow.png", (300,300))
 
 # Sounds
 
