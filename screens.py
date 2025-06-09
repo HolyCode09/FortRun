@@ -39,20 +39,20 @@ def settings_screen():
 
     
     font1 = get_font(50)
-    settingsText = font1.render("תורדגה", True, "brown")
+    settingsText = font1.render("תורדגה", True, "white")
     screen.blit(settingsText, (440, 60))
     
-    pygame.draw.rect(screen, (255, 191, 0), (225, 140, 200, 65), 4, 5)
+    pygame.draw.rect(screen, (255, 255, 255), (225, 140, 200, 65), 4, 5)
     
     soundSlider = Slider(
         screen,
         310, 150, 100, 10,
         min=0, max=100,
         step=1, initial=soundsVolume,
-        colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
+        colour=(255, 80, 0), handleColour=(255,255,255), valueColour=(255, 165, 0)
     )
     font2 = get_font(20)    
-    soundsText = font2.render("םילילצ", True, (255, 191, 0))
+    soundsText = font2.render("םילילצ", True, "white")
     screen.blit(soundsText, (230, 145))
 
     musicSlider = Slider(
@@ -60,36 +60,43 @@ def settings_screen():
         310, 180, 100, 10,
         min=0, max=100,
         step=1, initial=musicVolume,
-        colour=(255, 80, 0), handleColour=(255,0,0), valueColour=(255, 165, 0)
+        colour=(255, 80, 0), handleColour=(255,255,255), valueColour=(255, 165, 0)
     )
-    soundsText = font2.render("הקיסומ", True, (255, 191, 0))
+    soundsText = font2.render("הקיסומ", True, "white")
     screen.blit(soundsText, (230, 175))
 
 
-    pygame.draw.rect(screen, (255, 191, 0), (430, 140, 440, 170), 4, 5)
+    pygame.draw.rect(screen, (255, 255, 255), (430, 140, 440, 170), 4, 5)
 
     boy = load_img("pics/Runner1.png", (105, 145))
     girl = load_img("pics/Runner2.png", (110, 150))
     screen.blit(boy, (500, 150))
     screen.blit(girl, (670, 150))
 
-    boyRect = pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
-    girlRect = pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+    boyRect = pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 4, 5)
+    girlRect = pygame.draw.rect(screen, (255, 255, 255), (670, 150, 110, 150), 4, 5)
 
-    pygame.draw.rect(screen, (255, 191, 0), (225, 210, 200, 100), 4, 5)
-
-    pygame.draw.rect(screen, "black", (284, 215, 90, 90), 4, 5)
-    forNow1 = load_img("pics/maps/forNow.png", (82, 82))
-    forNow2 = load_img("pics/maps/forNow2.png", (82, 82))
+    pygame.draw.rect(screen, (255, 255, 255), (225, 210, 200, 100), 4, 5)
+    pygame.draw.rect(screen, "black", (260, 215, 130, 90), 4, 5)
+    desertMap = load_img("pics/mapPics/desert.png", (122, 82))
+    forestMap = load_img("pics/mapPics/forest.png", (122, 82))
+    seaMap = load_img("pics/mapPics/sea.png", (122, 82))
+    candyWorldMap = load_img("pics/mapPics/candyWorld.png", (122, 82))
+    moonMap = load_img("pics/mapPics/moon.png", (122, 82))
+    galaxyMap = load_img("pics/mapPics/galaxy.png", (122, 82))
     maps = [
-        forNow1,
-        forNow2,
+        desertMap,
+        forestMap,
+        seaMap,
+        candyWorldMap,
+        moonMap,
+        galaxyMap
     ]
-    screen.blit(maps[place], (288, 219))
-    arrowLeft = font1.render("<", True, (255, 191, 0))
-    arrowRight = font1.render(">", True, (255, 191, 0))
-    screen.blit(arrowLeft, (249, 235))
-    screen.blit(arrowRight, (380, 235))
+    screen.blit(maps[place], (264, 219))
+    arrowLeft = font1.render("<", True, (255, 255, 255))
+    arrowRight = font1.render(">", True, (255, 255, 255))
+    screen.blit(arrowLeft, (229, 235))
+    screen.blit(arrowRight, (395, 235))
 
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
@@ -98,11 +105,11 @@ def settings_screen():
         musicVolume = musicSlider.getValue()
         # Handle events
         if gen == "boy":
-            pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 2, 5)
-            pygame.draw.rect(screen, "black", (670, 150, 110, 150), 2, 5)
+            pygame.draw.rect(screen, (255, 191, 0), (500, 150, 110, 150), 4, 5)
+            pygame.draw.rect(screen, (255, 255, 255), (670, 150, 110, 150), 4, 5)
         else:
-            pygame.draw.rect(screen, "black", (500, 150, 110, 150), 2, 5)
-            pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 2, 5)
+            pygame.draw.rect(screen, (255, 255, 255), (500, 150, 110, 150), 4, 5)
+            pygame.draw.rect(screen, (255, 191, 0), (670, 150, 110, 150), 4, 5)
         events = pygame.event.get()
         for event in events:
             if event.type == pygame.QUIT:
@@ -122,23 +129,23 @@ def settings_screen():
                 elif girlRect.collidepoint(mouse_pos):
                     select_sound.play()
                     gen = "girl"
-                elif arrowLeft.get_rect(topleft=(249, 235)).collidepoint(mouse_pos):
+                elif arrowLeft.get_rect(topleft=(229, 235)).collidepoint(mouse_pos):
                     select_sound.play()
-                    screen.blit(font1.render("<", True, "red"), (249, 235))
+                    screen.blit(font1.render("<", True, "red"), (229, 235))
                     place -= 1
                     if place < 0:
                         place = len(maps) - 1
-                    screen.blit(maps[place], (288, 219))
-                elif arrowRight.get_rect(topleft=(380, 235)).collidepoint(mouse_pos):
+                    screen.blit(maps[place], (264, 219))
+                elif arrowRight.get_rect(topleft=(395, 235)).collidepoint(mouse_pos):
                     select_sound.play()
-                    screen.blit(font1.render(">", True, "red"), (380, 235))
+                    screen.blit(font1.render(">", True, "red"), (395, 235))
                     place += 1
                     if place >= len(maps):
                         place = 0
-                    screen.blit(maps[place], (288, 219))
+                    screen.blit(maps[place], (264, 219))
             if event.type == pygame.MOUSEBUTTONUP:
-                screen.blit(font1.render("<", True, (255, 191, 0)), (249, 235))
-                screen.blit(font1.render(">", True, (255, 191, 0)), (380, 235))
+                screen.blit(font1.render("<", True, (255, 255, 255)), (229, 235))
+                screen.blit(font1.render(">", True, (255, 255, 255)), (395, 235))
         
 
         pygame_widgets.update(events)
