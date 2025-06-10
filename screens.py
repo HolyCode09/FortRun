@@ -384,36 +384,193 @@ def baseScreen():
                 pygame.quit()
         pygame.display.flip()
 
-btnRect = pygame.Rect(400,350, 300,100)
 def startScreen():
+    global gen
+    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
     startBackground = start_bg
     screen.blit(startBackground,(0,0))
-    font1 = get_font(50)
-    font2Border = get_font(155)
-    font2 = get_font(150)
-    font3Border = get_font(205)
-    font3 = get_font(200)
-    titleText1Border = font2Border.render("ץורימה", True, "white")
-    titleText1 = font2.render("ץורימה", True, "orange")
-    titleText2Border = font3Border.render("רצבמל", True, "brown")
-    titleText2 = font3.render("רצבמל", True, "orange")
-    startBtnText = font1.render("לחתה", True, "brown")
-    startBtnTextShadow = font1.render("לחתה", True, "black")
-    pygame.draw.rect(screen,"orange", btnRect,0,100)
-    pygame.draw.rect(screen,"brown", (400,350, 300,100),5,100)
-    screen.blit(titleText1Border, (275,0))
-    screen.blit(titleText1, (285,3))
-    screen.blit(titleText2Border, (200,100))
-    screen.blit(titleText2, (207,103))
-    screen.blit(startBtnTextShadow,(479,375))
-    screen.blit(startBtnText,(477,372))
+    # font1 = get_font(50)
+    # font2Border = get_font(155)
+    # font2 = get_font(150)
+    # font3Border = get_font(205)
+    # font3 = get_font(200)
+    # titleText1Border = font2Border.render("ץורימה", True, "white")
+    # titleText1 = font2.render("ץורימה", True, "orange")
+    # titleText2Border = font3Border.render("רצבמל", True, "brown")
+    # titleText2 = font3.render("רצבמל", True, "orange")
+    # startBtnText = font1.render("לחתה", True, "brown")
+    # startBtnTextShadow = font1.render("לחתה", True, "black")
+    # pygame.draw.rect(screen,"orange", btnRect,0,100)
+    # pygame.draw.rect(screen,"brown", (400,350, 300,100),5,100)
+    # screen.blit(titleText1Border, (275,0))
+    # screen.blit(titleText1, (285,3))
+    # screen.blit(titleText2Border, (200,100))
+    # screen.blit(titleText2, (207,103))
+    # screen.blit(startBtnTextShadow,(479,375))
+    # screen.blit(startBtnText,(477,372))
+
+    icon = load_img("pics/game_Icon.png", (750, 300))
+    screen.blit(icon, (-10, 60))
+
+    lines = [
+        "םיבושח םירבד ופסאת ,וצורת ,הקתפרהל ואצ",
+        "ףוסב םכלש ידוסה רצבמה תא ונבו"
+    ]
+
+    sticker = load_img("pics/goSettingsSticker.png", (185, 185))
+    # sticker = pygame.transform.rotate(sticker, -3)
+    screen.blit(sticker, (800, 0))
+
+    for i in range(2):
+        text = get_font(30).render(lines[i], True, "black")
+        if i == 0:
+            screen.blit(text, (51, 401))
+        else:
+            screen.blit(text, (121, 431))
+
+    for i in range(2):
+        text = get_font(30).render(lines[i], True, "white")
+        if i == 0:
+            screen.blit(text, (50, 400))
+        else:
+            screen.blit(text, (120, 430))
+     # הגדרות העמוד - הזזה ימינה
+    pillar_width = 80  # צר יותר מהכפתורים
+    button_start_y = 180  # התחלת אזור הכפתורים
+    button_spacing = 20  # רווח בין הכפתורים
+    right_margin = 150  # מרווח מהצד הימני של המסך
+ 
+    # הגדרות הכפתורים
+    button_heights = {
+        "לחתה": 80,
+        "תוארוה": 70,
+        "תורדגה": 60,
+        "האיצי": 50
+    }
+ 
+    # חישוב גובה העמוד בהתאם לכפתורים
+    total_buttons_height = sum(button_heights.values()) + (len(button_heights) - 1) * button_spacing
+    pillar_height = total_buttons_height + 40  # תוספת שוליים
+ 
+    # מיקום חדש לעמוד - מימין
+    pillar_x = 1080 - pillar_width - right_margin
+    pillar_y = button_start_y - 20
+ 
+    # ציור הצל של העמוד
+    shadow_surface = pygame.Surface((pillar_width, pillar_height))
+    shadow_surface.fill((30, 30, 30))
+    shadow_surface.set_alpha(80)
+    screen.blit(shadow_surface, (pillar_x + 8, pillar_y + 8))
+ 
+    # ציור העמוד העץ
+    pillar_surface = pygame.Surface((pillar_width, pillar_height))
+    wood_color = (139, 90, 30)
+    pillar_surface.fill(wood_color)
+ 
+    # הוספת טקסטורת עץ
+    for i in range(0, pillar_height, 15):
+        wood_line_color = (101, 67, 33)
+        pygame.draw.line(pillar_surface, wood_line_color, (0, i), (pillar_width, i), 2)
+        for j in range(5):
+            x = random.randint(0, pillar_width)
+            pygame.draw.circle(pillar_surface, wood_line_color, (x, i), 2)
+ 
+    pygame.draw.rect(pillar_surface, (101, 67, 33), (0, 0, pillar_width, pillar_height), 5)
+    screen.blit(pillar_surface, (pillar_x, pillar_y))
+ 
+    font_buttons = get_font(50)
+ 
+    # סידור הכפתורים
+    button_width_base = 300
+    current_y = button_start_y
+    buttons = {}
+ 
+    for text, height in button_heights.items():
+        width = button_width_base - (80 - height)
+        # מיקום חדש לכפתורים - מימין
+        x = pillar_x - (width - pillar_width) // 2
+        buttons[text] = (x, current_y, width, height)
+        current_y += height + button_spacing
+ 
+    button_rects = {}
+
+    # יצירת הכפתורים
+    for text, (x, y, width, height) in buttons.items():
+        btn_rect = pygame.Rect(x, y, width, height)
+
+        # צל לכפתור
+        shadow_rect = btn_rect.copy()
+        shadow_rect.x += 4
+        shadow_rect.y += 4
+        pygame.draw.rect(screen, (60, 30, 0), shadow_rect, 0, 15)  # border_radius=15
+
+        # רקע עץ לכפתור עם קצוות מעוגלים
+        button_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        wood_button_color = (205, 133, 63)
+        button_surface.fill((0,0,0,0))
+        pygame.draw.rect(button_surface, wood_button_color, (0, 0, width, height), border_radius=15)
+
+        # מסכה עבור קצוות מעוגלים
+        mask_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        mask_surface.fill((0,0,0,0))
+        pygame.draw.rect(mask_surface, (255,255,255,255), (0, 0, width, height), border_radius=15)
+
+        # טקסטורת עץ לכפתור (רק בתוך המסכה)
+        texture_surface = pygame.Surface((width, height), pygame.SRCALPHA)
+        for i in range(0, height, 5):
+            wood_line_color = (139, 69, 19)
+            pygame.draw.line(texture_surface, wood_line_color, (0, i), (width, i), 1)
+            for j in range(1):  # פחות עיגולים, שיהיה עדין
+                xk = random.randint(10, width-10)
+                pygame.draw.circle(texture_surface, wood_line_color, (xk, i), 2)
+        # החלת המסכה
+        texture_surface.blit(mask_surface, (0,0), special_flags=pygame.BLEND_RGBA_MULT)
+        button_surface.blit(texture_surface, (0,0), special_flags=pygame.BLEND_RGBA_ADD)
+
+        screen.blit(button_surface, btn_rect)
+        pygame.draw.rect(screen, (101, 67, 33), btn_rect, 3, 15)  # border_radius=15
+
+        # הטקסט על הכפתור
+        text_surface = font_buttons.render(text, True, "white")
+        text_rect = text_surface.get_rect(center=btn_rect.center)
+        screen.blit(text_surface, text_rect)
+
+        button_rects[text] = btn_rect
+
+    pygame.display.flip()
+
     while True:
+        mouse_pos = pygame.mouse.get_pos()
+        cursor_set = False
+        for btn_rect in button_rects.values():
+            if btn_rect.collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                cursor_set = True
+                break
+        if not cursor_set:
+            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
-                if btnRect.collidepoint(event.pos):
-                    # bgMuisc.stop()
-                    select_sound.play()
-                    settings_screen()
+                for text, btn_rect in button_rects.items():
+                    if btn_rect.collidepoint(event.pos):
+                        select_sound.play()
+                        # Handle button actions here if needed
+                        if text == "לחתה":
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                            start_music.stop()
+                            if gen == "boy":
+                                runScreen(0)
+                            else:
+                                runScreen(1)
+                        elif text == "תוארוה":
+                            pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+                            # tutorialScreen()
+                        elif text == "תורדגה":
+                            settings_screen()
+                        elif text == "האיצי":
+                            pygame.quit()
+
+                        # ...add more actions for other buttons if needed...
         pygame.display.flip()
