@@ -34,8 +34,6 @@ def load_font(path, size):
 
 # Images
 run_bg = load_img("pics/Run_Screen_Background.jpg", (1080,520))
-paths_img = load_img("pics/paths1.png", (595,520))
-paths_img2 = load_img("pics/paths2.png", (600,520))
 player1_img = load_img("pics/Runner1.png", (130,170))
 player2_img = load_img("pics/Runner2.png", (130,170))
 before_run_window = load_img("pics/beforeRunPage.png", (1080,500))
@@ -49,6 +47,19 @@ seaMap = load_img("pics/mapPics/sea.png", (122, 82))
 candyWorldMap = load_img("pics/mapPics/candyWorld.png", (122, 82))
 moonMap = load_img("pics/mapPics/moon.png", (122, 82))
 galaxyMap = load_img("pics/mapPics/galaxy.png", (122, 82))
+candyWorldrunMap = load_img("pics/runMaps/candyWorldMap.jpg", (1080,520))
+desertrunMap = load_img("pics/runMaps/desertMap.jpg", (1080,520))
+forestrunMap = load_img("pics/runMaps/forestMap.jpg", (1080,520))
+moonrunMap = load_img("pics/runMaps/moonMap.jpg", (1080,520))
+searunMap = load_img("pics/runMaps/seaMap.jpg", (1080,520))
+spacerunMap = load_img("pics/runMaps/spaceMap.jpg", (1080,520))
+candyWorldRunPath = load_img("pics/runPaths/candyWorldPaths.png", (600,520))
+desertRunPath = load_img("pics/runPaths/desertPaths.png", (600,520))
+forestRunPath = load_img("pics/runPaths/forestPaths.png", (600,520))
+moonRunPath = load_img("pics/runPaths/moonPaths.png", (600,520))
+seaRunPath = load_img("pics/runPaths/seaPaths.png", (600,520))
+spaceRunPath = load_img("pics/runPaths/galaxyPaths.png", (600,520))
+
 
 # Sounds
 

@@ -1,8 +1,10 @@
 # screens.py
 from assets import (
-    screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
+    screen, clock, run_bg, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, select_sound, goBack, desertMap, seaMap, moonMap, forestMap, galaxyMap, candyWorldMap, get_font, load_img, soundsVol
+    start_bg, fortress_bg, dust_img, start_music, select_sound, goBack, desertMap, seaMap, moonMap, forestMap, galaxyMap, candyWorldMap,
+    candyWorldrunMap, desertrunMap, forestrunMap, moonrunMap, searunMap, spacerunMap, candyWorldRunPath, desertRunPath, forestRunPath, spaceRunPath, moonRunPath, seaRunPath,
+    get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -10,6 +12,7 @@ import pygame_widgets
 from pygame_widgets.slider import Slider
 import pygame
 import random
+import cv2
 
 
 
@@ -240,8 +243,25 @@ def settings_screen():
     #     pygame.display.flip()
 
 def runScreen(gen):
-    global y_1, y_2, lives, matsSpawned, matsCount, chosen_map
-    chosen_map = pygame.transform.scale(chosen_map, (1080, 520))
+    global y_1, y_2, lives, matsSpawned, matsCount, place, candyWorldrunMap, desertrunMap, forestrunMap, moonrunMap, searunMap, spacerunMap, candyWorldRunPath, desertRunPath, forestRunPath, moonRunPath, seaRunPath, spaceRunPath
+    runMaps = [
+        desertrunMap,
+        forestrunMap,
+        searunMap,
+        candyWorldrunMap,
+        moonrunMap,
+        spacerunMap
+    ]
+    runPaths = [
+        desertRunPath,
+        forestRunPath,
+        seaRunPath,
+        candyWorldRunPath,
+        moonRunPath,
+        spaceRunPath
+    ]
+    
+
     foodCount = 0  # Add this line at the start of runScreen
     toysCollected = 0  # Track collected toys
     summoned_toys = set()  # Track which toys have been summoned
@@ -299,7 +319,7 @@ def runScreen(gen):
 
     def add_new_item():
         global matsSpawned
-        item_x = random.choice([300,495,690])
+        item_x = random.choice([285,485,680])  # Adjusted x positions more to the right
         item_y = -100
 
         # Summon a toy if not all have been summoned yet
@@ -322,11 +342,11 @@ def runScreen(gen):
         if item_image[1] == "mats":
             matsSpawned += 1
 
-    x_player = 495
+    x_player = 485  # Middle lane position, adjusted more to the right
     path = "Mid"
-    runBackground1 = chosen_map
-    paths1 = paths_img
-    paths2 = paths_img2
+    runBackground1 = runMaps[place]
+    paths1 = runPaths[place]
+    paths2 = runPaths[place]
     player1 = player1_img
     player2 = player2_img
     players = [player1,player2]
@@ -358,8 +378,8 @@ def runScreen(gen):
     while True:
         time+=1
         screen.blit(runBackground1,(0,0))
-        screen.blit(paths1,(260,y_1))
-        screen.blit(paths2,(257,y_2))
+        screen.blit(paths1,(240,y_1))  # Adjusted from 220 to 240
+        screen.blit(paths2,(237,y_2))  # Adjusted from 217 to 237
         needs = font.render(f"10/{matsCount} םירמוח", True, "white")
         livesCheck = font.render(f"{lives} :םייח רפסמ", True, "white")
         foodCheck = font.render(f"{foodCount} :הייחמ יבאשמ", True, "white")
@@ -374,11 +394,11 @@ def runScreen(gen):
         if y_2>=520:
             y_2=-520
         if path == "Mid":
-            x_player=495
+            x_player = 485  # Adjusted middle position
         elif path == "Left":
-            x_player = 300
+            x_player = 285  # Adjusted left position
         else:
-            x_player = 690
+            x_player = 680  # Adjusted right position
         screen.blit(players[gen],(x_player,320))
         if time%35==0:
             players[gen] = pygame.transform.flip(players[gen], True, False)
@@ -414,12 +434,12 @@ def runScreen(gen):
             bgMusic.stop()
             lose.play()
             game_over_screen()
-        if x_player == 300:
-            colideHappen(300)
-        elif x_player == 495:
-            colideHappen(495)
+        if x_player == 285:
+            colideHappen(285)
+        elif x_player == 485:
+            colideHappen(485)
         else:
-            colideHappen(690)
+            colideHappen(680)
         pygame.display.flip()
 
 def build(persentage):
