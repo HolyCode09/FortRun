@@ -332,7 +332,7 @@ def runScreen(gen):
     lose = lose_sound
     collectSound = collect_sound
     hitSound = hit_sound
-    font = get_font(50)
+    font = get_font(20)
     item_images = [
         (load_img("pics/needs/life/heart.png", (120, 120)), "life"),
         (load_img("pics/needs/life/heart.png", (120, 120)), "life"),
@@ -438,12 +438,14 @@ def runScreen(gen):
                     collectSound.play()
                     toysCollected = min(toysCollected + 1, 3)
 
+    matsStack = load_img("pics/miniStacks/matsStack.png", (20,20))
+    foodStack = load_img("pics/miniStacks/foodStack.png", (20,20))
+    toysStack = load_img("pics/miniStacks/toysStack.png", (20,20))
     while True:
         time += 1
         screen.blit(runBackground1, (0, 0))
         screen.blit(paths1, (240, y_1))  # Adjusted from 220 to 240
         screen.blit(paths2, (237, y_2))  # Adjusted from 217 to 237
-        needs = font.render(f"10/{matsCount} םירמוח", True, "white")
         screen.blit(woodSurface, (820, -35))
 
         heartImg = load_img("pics/needs/life/heart.png", (50, 50))
@@ -453,10 +455,24 @@ def runScreen(gen):
         for i in range(3):
             screen.blit(hearts[i], (20 + i * spaceBetwweenHearts, 20))
 
-        foodCheck = font.render(f"{foodCount} :הייחמ יבאשמ", True, "white")
-        food_x = 690 if foodCount < 10 else 670
-        screen.blit(needs, (760, 0))
-        screen.blit(foodCheck, (food_x, 100))
+        needs = font.render(f":םירמוח", True, "white")
+        foodCheck = font.render(":ןוזמ", True, "white")
+        toysCheck = font.render(":םיעוצעצ", True, "white")
+        screen.blit(needs, (1000, 10))
+        screen.blit(foodCheck, (1030, 55))
+        screen.blit(toysCheck, (985, 100))
+        grayMatsStack = apply_grayscale(matsStack)
+        grayFoodStack = apply_grayscale(foodStack)
+        grayToysStack = apply_grayscale(toysStack)
+        matsCollectedStack = [matsStack] * matsCount + [grayMatsStack] * (10 - matsCount)
+        foodCollectedStack = [foodStack] * foodCount + [grayFoodStack] * (10 - foodCount)
+        toysCollectedStack = [toysStack] * toysCollected + [grayToysStack] * (3 - toysCollected)
+        spaceBetweenStacks = 20
+        for i in range(10):
+            screen.blit(matsCollectedStack[i], (1050 - i * spaceBetweenStacks, 30))
+            screen.blit(foodCollectedStack[i], (1050 - i * spaceBetweenStacks, 75))
+        for i in range(3):
+            screen.blit(toysCollectedStack[i], (1050 - i * spaceBetweenStacks, 120))
         y_1 += 2
         y_2 += 2
         if y_1 >= 520:
