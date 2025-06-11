@@ -59,6 +59,7 @@ forestRunPath = load_img("pics/runPaths/forestPaths.png", (600,520))
 moonRunPath = load_img("pics/runPaths/moonPaths.png", (600,520))
 seaRunPath = load_img("pics/runPaths/seaPaths.png", (600,520))
 spaceRunPath = load_img("pics/runPaths/galaxyPaths.png", (600,520))
+woodSurface = load_img("pics/woodSurface.png", (400,200))
 
 
 # Sounds
