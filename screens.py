@@ -2,7 +2,7 @@
 from assets import (
     screen, clock, run_bg, paths_img, paths_img2, player1_img, player2_img, before_run_window,
     go_sound, bg_run_music, lose_sound, collect_sound, hit_sound, drama_sound, win_sound, build_sound,
-    start_bg, fortress_bg, dust_img, start_music, select_sound, goBack, get_font, load_img, soundsVol
+    start_bg, fortress_bg, dust_img, start_music, select_sound, goBack, desertMap, seaMap, moonMap, forestMap, galaxyMap, candyWorldMap, get_font, load_img, soundsVol
 )
 from state import y_1, y_2, lives, matsCount, matsSpawned
 from utils import exit_game
@@ -24,9 +24,19 @@ def game_over_screen():
 soundsVolume = musicVolume = 100
 gen = "boy"
 place = 0
+chosen_toys = [0, 1, 2]  # Indices of the 3 chosen toys, persists outside settings_screen
+maps = [
+    desertMap,
+    forestMap,
+    seaMap,
+    candyWorldMap,
+    moonMap,
+    galaxyMap
+]
+chosen_map = maps[place]
 
 def settings_screen():
-    global soundsVolume, musicVolume, gen, place
+    global soundsVolume, musicVolume, gen, place, chosen_toys, maps, chosen_map
 
     screen.fill((255, 191, 0))
     brickWall_img = load_img("pics/BrickWall.png", (1130,600))
@@ -78,25 +88,46 @@ def settings_screen():
 
     pygame.draw.rect(screen, (255, 255, 255), (225, 210, 200, 100), 4, 5)
     pygame.draw.rect(screen, "black", (260, 215, 130, 90), 4, 5)
-    desertMap = load_img("pics/mapPics/desert.png", (122, 82))
-    forestMap = load_img("pics/mapPics/forest.png", (122, 82))
-    seaMap = load_img("pics/mapPics/sea.png", (122, 82))
-    candyWorldMap = load_img("pics/mapPics/candyWorld.png", (122, 82))
-    moonMap = load_img("pics/mapPics/moon.png", (122, 82))
-    galaxyMap = load_img("pics/mapPics/galaxy.png", (122, 82))
-    maps = [
-        desertMap,
-        forestMap,
-        seaMap,
-        candyWorldMap,
-        moonMap,
-        galaxyMap
-    ]
+
+
     screen.blit(maps[place], (264, 219))
     arrowLeft = font1.render("<", True, (255, 255, 255))
     arrowRight = font1.render(">", True, (255, 255, 255))
     screen.blit(arrowLeft, (229, 235))
     screen.blit(arrowRight, (395, 235))
+
+    pygame.draw.rect(screen, (255, 255, 255), (225, 315, 645, 110), 4, 5)
+    # five squares inside the rectangle to contain 5 toys
+    bearToy = load_img("pics/toys/bear.png", (70, 70))
+    legoToye = load_img("pics/toys/lego.png", (70, 70))
+    puzzleToy = load_img("pics/toys/puzzle.png", (70, 70))
+    nintendoToy = load_img("pics/toys/nintendo.png", (70, 70))
+    barbieToy = load_img("pics/toys/barbie.png", (70, 70))
+    
+    toys = [
+        bearToy,
+        legoToye,
+        puzzleToy,
+        nintendoToy,
+        barbieToy
+    ]
+
+    # --- Toys squares logic ---
+    toy_rects = []
+    toy_frame_colors = [(255, 191, 0)] * 3 + [(255, 255, 255)] * 2  # First 3 yellow, last 2 white
+    toy_selected = [i in chosen_toys for i in range(5)]
+    toy_order = chosen_toys.copy()  # Indices of currently selected toys, in order of selection
+
+    rightX = 267
+    for i in range(5):  
+        toy_rect = pygame.Rect(rightX, 330, 80, 80)
+        toy_rects.append(toy_rect)
+        frame_color = (255, 191, 0) if toy_selected[i] else (255, 255, 255)
+        pygame.draw.rect(screen, frame_color, toy_rect, 4, 5)
+        screen.blit(toys[i], (rightX+4, 335))
+        rightX += 120
+
+    # ...existing code...
 
     while True:
         soundsVol(soundSlider.getValue() / 100, "sound")
@@ -115,14 +146,44 @@ def settings_screen():
             if event.type == pygame.QUIT:
                 exit_game()
             mouse_pos = pygame.mouse.get_pos()
-            if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
-                if event.type == pygame.MOUSEBUTTONDOWN:
+            # --- Toys squares hover cursor ---
+            toys_cursor = False
+            for rect in toy_rects:
+                if rect.collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                    toys_cursor = True
+                    break
+            if not toys_cursor:
+                if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                else:
+                    pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            # --- Toys squares click logic ---
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
                     select_sound.play()
                     startScreen()
-            else:
-                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
-            if event.type == pygame.MOUSEBUTTONDOWN:
+                    return
+                for idx, rect in enumerate(toy_rects):
+                    if rect.collidepoint(mouse_pos):
+                        if not toy_selected[idx]:
+                            # If already 3 selected, unselect the earliest one
+                            if sum(toy_selected) == 3:
+                                first_idx = toy_order.pop(0)
+                                toy_selected[first_idx] = False
+                                pygame.draw.rect(screen, (255, 255, 255), toy_rects[first_idx], 4, 5)
+                                screen.blit(toys[first_idx], (toy_rects[first_idx].x+4, toy_rects[first_idx].y+5))
+                            # Select new toy
+                            toy_selected[idx] = True
+                            toy_order.append(idx)
+                            pygame.draw.rect(screen, (255, 191, 0), rect, 4, 5)
+                            screen.blit(toys[idx], (rect.x+4, rect.y+5))
+                            # Update global chosen_toys
+                            chosen_toys = toy_order.copy()
+                            select_sound.play()
+                            pygame.display.update([rect])
+                        break
+                # ...existing code...
                 if boyRect.collidepoint(mouse_pos):
                     select_sound.play()
                     gen = "boy"
@@ -131,14 +192,14 @@ def settings_screen():
                     gen = "girl"
                 elif arrowLeft.get_rect(topleft=(229, 235)).collidepoint(mouse_pos):
                     select_sound.play()
-                    screen.blit(font1.render("<", True, "red"), (229, 235))
+                    screen.blit(font1.render("<", True, (255, 191, 0)), (229, 235))
                     place -= 1
                     if place < 0:
                         place = len(maps) - 1
                     screen.blit(maps[place], (264, 219))
                 elif arrowRight.get_rect(topleft=(395, 235)).collidepoint(mouse_pos):
                     select_sound.play()
-                    screen.blit(font1.render(">", True, "red"), (395, 235))
+                    screen.blit(font1.render(">", True, (255, 191, 0)), (395, 235))
                     place += 1
                     if place >= len(maps):
                         place = 0
@@ -179,8 +240,11 @@ def settings_screen():
     #     pygame.display.flip()
 
 def runScreen(gen):
-    global y_1, y_2, lives, matsSpawned, matsCount
+    global y_1, y_2, lives, matsSpawned, matsCount, chosen_map
+    chosen_map = pygame.transform.scale(chosen_map, (1080, 520))
     foodCount = 0  # Add this line at the start of runScreen
+    toysCollected = 0  # Track collected toys
+    summoned_toys = set()  # Track which toys have been summoned
     go_sound.play()
     bgMusic = bg_run_music
     bgMusic.play(-1)
@@ -215,6 +279,14 @@ def runScreen(gen):
         (load_img("pics/obstacles/sand_obsticle.png", (120,120)), "obs"),
         (load_img("pics/obstacles/stone_obsticle.png", (120,120)), "obs"),
     ]
+    # Add chosen toys to the list of possible items to summon, but only once each
+    toy_imgs = [
+        load_img("pics/toys/bear.png", (120, 120)),
+        load_img("pics/toys/lego.png", (120, 120)),
+        load_img("pics/toys/puzzle.png", (120, 120)),
+        load_img("pics/toys/nintendo.png", (120, 120)),
+        load_img("pics/toys/barbie.png", (120, 120)),
+    ]
     items_pos = []
     add_interval = 1000
     last_add_time = 0
@@ -229,6 +301,16 @@ def runScreen(gen):
         global matsSpawned
         item_x = random.choice([300,495,690])
         item_y = -100
+
+        # Summon a toy if not all have been summoned yet
+        if len(summoned_toys) < 3:
+            available_toys = [i for i in chosen_toys if i not in summoned_toys]
+            if available_toys and random.random() < 0.15:  # 15% chance to summon a toy
+                toy_idx = random.choice(available_toys)
+                items_pos.append((item_x, item_y, (toy_imgs[toy_idx], "toy", toy_idx)))
+                summoned_toys.add(toy_idx)
+                return
+
         item_image = random.choice(item_images)
         if item_image[1] == "life" and (lives == 3 or has_hearts_on_screen()):
             add_new_item()
@@ -242,8 +324,7 @@ def runScreen(gen):
 
     x_player = 495
     path = "Mid"
-    runBackground1 = run_bg
-    runBackground2 = run_bg
+    runBackground1 = chosen_map
     paths1 = paths_img
     paths2 = paths_img2
     player1 = player1_img
@@ -253,7 +334,8 @@ def runScreen(gen):
 
     def colideHappen(rightX):
         global lives, matsCount
-        nonlocal foodCount  # Add this line
+        nonlocal foodCount
+        nonlocal toysCollected
         for item in items_pos:
             if item[0] == rightX and item[1] < 480 and item[1] > 520 - 250:
                 items_pos.remove(item)
@@ -269,11 +351,13 @@ def runScreen(gen):
                 if item[2][1] == "food":
                     collectSound.play()
                     foodCount+=1
+                if item[2][1] == "toy":
+                    collectSound.play()
+                    toysCollected = min(toysCollected + 1, 3)
 
     while True:
         time+=1
-        screen.blit(runBackground1,(0,y_1))
-        screen.blit(runBackground2,(0,y_2))
+        screen.blit(runBackground1,(0,0))
         screen.blit(paths1,(260,y_1))
         screen.blit(paths2,(257,y_2))
         needs = font.render(f"10/{matsCount} םירמוח", True, "white")
@@ -569,6 +653,7 @@ def startScreen():
                             # tutorialScreen()
                         elif text == "תורדגה":
                             settings_screen()
+                            return
                         elif text == "האיצי":
                             pygame.quit()
 

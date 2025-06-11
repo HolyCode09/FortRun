@@ -43,6 +43,12 @@ start_bg = load_img("pics/Start_Screen_Background.jpg", (1080,520))
 fortress_bg = load_img("pics/Fortres_Background.jpg", (1080,520))
 dust_img = load_img("pics/Bluilding_Dust.png", (600,600))
 goBack = load_img("pics/goBackIcon.png", (50,50))
+desertMap = load_img("pics/mapPics/desert.png", (122, 82))
+forestMap = load_img("pics/mapPics/forest.png", (122, 82))
+seaMap = load_img("pics/mapPics/sea.png", (122, 82))
+candyWorldMap = load_img("pics/mapPics/candyWorld.png", (122, 82))
+moonMap = load_img("pics/mapPics/moon.png", (122, 82))
+galaxyMap = load_img("pics/mapPics/galaxy.png", (122, 82))
 
 # Sounds
 
