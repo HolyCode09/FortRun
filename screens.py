@@ -60,6 +60,118 @@ def game_over_screen():
     exit_game()
 
 
+
+
+
+def tutorialScreen():
+    screen.fill((255, 191, 0))
+    brickWall_img = load_img("pics/BrickWall.png", (1130, 600))
+    screen.blit(brickWall_img, (-20, -50))
+
+    screen.blit(goBack, (20, 20))
+
+    woodSign = load_img("pics/titleWoodenSign.png", (300, 100))
+    screen.blit(woodSign, (390, 37))
+
+    font1 = get_font(50)
+    tutorialText = font1.render("תוארוה", True, "white")
+    screen.blit(tutorialText, (450, 60))
+
+    pygame.draw.line(screen, (255, 255, 255), (535, 140), (535, 420), 4)
+
+    miniTitle1 = load_img("pics/woodThickSurface.png", (150, 40))
+    settingsTutorialText = get_font(20).render("תורדגה", True, "white")
+    screen.blit(miniTitle1, (650, 130))
+    screen.blit(settingsTutorialText, (690, 138))
+
+    selectCharacterText = get_font(35).render("תומד תריחב", True, "white")
+    selectCharacterImg = load_img("pics/tuturialPics/selectCharacter.png", (110, 60))
+    screen.blit(selectCharacterText, (700, 190))
+    screen.blit(selectCharacterImg, (560, 180))
+
+    pygame.draw.line(screen, (255, 255, 255), (550, 260), (876, 260), 4)
+
+    mapSelectorText = get_font(35).render("הפמ תריחב", True, "white")
+    mapSelectorImg = load_img("pics/tuturialPics/mapSelector.png", (110, 60))
+    screen.blit(mapSelectorText, (700, 285))
+    screen.blit(mapSelectorImg, (560, 275))
+
+    pygame.draw.line(screen, (255, 255, 255), (550, 350), (910, 350), 4)
+
+    toysSelectorText = get_font(25).render("םיעוצעצ תריחב", True, "white")
+    toysSelectorImg = load_img("pics/tuturialPics/toysSelector.png", (180, 60))
+    screen.blit(toysSelectorText, (760, 390))
+    screen.blit(toysSelectorImg, (560, 370))
+
+
+
+    miniTitle2 = load_img("pics/woodThickSurface.png", (150, 40))
+    gameTutorialText = get_font(20).render("קחשמ", True, "white")
+    screen.blit(miniTitle2, (280, 130))
+    screen.blit(gameTutorialText, (325, 138))
+
+    moveText = get_font(30).render("הזוזת", True, "white")
+    movePic = load_img("pics/tuturialPics/movePic.png", (70, 50))
+    keysPic = load_img("pics/tuturialPics/keys.png", (70, 70))
+    screen.blit(moveText, (420, 185))
+    screen.blit(keysPic, (320, 165))
+    screen.blit(movePic, (220, 180))
+
+    pygame.draw.line(screen, (255, 255, 255), (175, 235), (515, 235), 4)
+
+    carefulText = get_font(30).render("םילושכמ ורהזיה", True, "white")
+    obsticlesStack = load_img("pics/miniStacks/obsticlesStack.png", (70, 70))
+    screen.blit(carefulText, (280, 250))
+    screen.blit(obsticlesStack, (200, 235))
+
+    pygame.draw.line(screen, (255, 255, 255), (160, 300), (515, 300), 4)
+
+    heartsText = get_font(30).render("תובבל ופסיא", True, "white")
+    heartImg = load_img("pics/needs/life/heart.png", (40, 40))
+    screen.blit(heartsText, (330, 315))
+    screen.blit(heartImg, (280, 310))
+    screen.blit(heartImg, (230, 310))
+    screen.blit(heartImg, (180, 310))
+
+    pygame.draw.line(screen, (255, 255, 255), (200, 360), (515, 360), 4)
+
+    needsText = get_font(30).render("ופסיא", True, "white")
+    screen.blit(needsText, (330, 365))
+    matsStack = load_img("pics/miniStacks/matsStack.png", (40, 40))
+    foodStack = load_img("pics/miniStacks/foodStack.png", (40, 40))
+    toysStack = load_img("pics/miniStacks/toysStack.png", (40, 40))
+    screen.blit(matsStack, (480, 395))
+    screen.blit(foodStack, (350, 395))
+    screen.blit(toysStack, (220, 395))
+    EnglishFont = pygame.font.Font(None, 40)
+    matsMuiltiplier = EnglishFont.render("10X", True, "white")
+    foodMuiltiplier = EnglishFont.render("10X", True, "white")
+    toysMuiltiplier = EnglishFont.render("3X", True, "white")
+    screen.blit(matsMuiltiplier, (480-50, 407))
+    screen.blit(foodMuiltiplier, (350-50, 407))
+    screen.blit(toysMuiltiplier, (220-46, 407))
+
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit_game()
+            mouse_pos = pygame.mouse.get_pos()
+            if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+            else:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if goBack.get_rect(topleft=(20, 20)).collidepoint(mouse_pos):
+                    select_sound.play()
+                    startScreen()
+                    return
+
+
+
+        pygame.display.flip()
+
+
 soundsVolume = musicVolume = 100
 gen = "boy"
 place = 0
@@ -265,6 +377,7 @@ def settings_screen():
 
         pygame_widgets.update(events)
         pygame.display.flip()
+
 
 
 # def beforeRun():
@@ -611,7 +724,8 @@ def startScreen():
             screen.blit(text, (120, 430))
 
     # --- New pillar and buttons using images ---
-    pillar_img = load_img("pics/woodenPillar.png", (100, 500))
+    pillar_img = load_img("pics/woodThickSurface.png", (100, 500))
+    pillar_img = pygame.transform.rotate(pillar_img, 180)  # Rotate the pillar image
     pillar_x, pillar_y = 850, 100
     screen.blit(pillar_img, (pillar_x-10, pillar_y))
 
@@ -675,7 +789,7 @@ def startScreen():
                             else:
                                 runScreen(1)
                         elif btn["action"] == "תוארוה":
-                            # tutorialScreen()
+                            tutorialScreen()
                             pass
                         elif btn["action"] == "תורדגה":
                             settings_screen()
