@@ -1,14 +1,18 @@
 # assets.py
+
 import pygame
 import os
 pygame.init()
 
+# Set up the main game screen and clock
 screen = pygame.display.set_mode((1080,520))
 clock = pygame.time.Clock()
 
+# Set window caption and icon
 pygame.display.set_caption("המירוץ למבצר")
 pygame.display.set_icon(pygame.image.load("pics/game_Icon.png"))
 
+# Function to set the volume for all sounds or music
 def soundsVol(volume, check):
     for mixer in sounds:
         if mixer[1] == "sound" and check == "sound":
@@ -16,23 +20,25 @@ def soundsVol(volume, check):
         elif mixer[1] == "music" and check == "music":
             mixer[0].set_volume(volume)
 
-
-
-
 # Asset loading helpers
+
+# Load an image and optionally scale it to a given size
 def load_img(path, size=None):
     img = pygame.image.load(path)
     if size:
         img = pygame.transform.scale(img, size)
     return img
 
+# Load a sound file
 def load_sound(path):
     return pygame.mixer.Sound(path)
 
+# Load a font file with a given size
 def load_font(path, size):
     return pygame.font.Font(path, size)
 
 # Images
+# Load all images used in the game, with appropriate scaling
 run_bg = load_img("pics/Run_Screen_Background.jpg", (1080,520))
 player1_img = load_img("pics/Runner1.png", (130,170))
 player2_img = load_img("pics/Runner2.png", (130,170))
@@ -61,9 +67,8 @@ seaRunPath = load_img("pics/runPaths/seaPaths.png", (600,520))
 spaceRunPath = load_img("pics/runPaths/galaxyPaths.png", (600,520))
 woodSurface = load_img("pics/woodSurface.png", (400,200))
 
-
 # Sounds
-
+# Load all sound effects and music used in the game
 go_sound = load_sound("sounds/GO.mp3")
 bg_run_music = load_sound("sounds/Running_Background_Music.mp3")
 lose_sound = load_sound("sounds/Lose_Sound.mp3")
@@ -75,6 +80,7 @@ build_sound = load_sound("sounds/Building_Sound.mp3")
 start_music = load_sound("sounds/Start_Screen_Background_Muisc.mp3")
 select_sound = load_sound("sounds/select.mp3")
 
+# List of all sounds and music for easy volume control
 sounds = [
     (go_sound, "sound"),
     (bg_run_music, "music"),
@@ -89,5 +95,6 @@ sounds = [
 ]
 
 # Fonts
+# Helper to get the main game font at a given size
 def get_font(size):
     return load_font("ganclm_bold-webfont.woff", size)

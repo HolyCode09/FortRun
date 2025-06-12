@@ -1,4 +1,6 @@
 # screens.py
+
+# Import all assets and helpers from assets.py
 from assets import (
     screen,
     clock,
@@ -51,6 +53,7 @@ import pygame
 import random
 
 
+# Game over screen with fade-in animation for game over image and buttons
 def game_over_screen():
     surcafe = load_img("pics/woodSurface.png", (1080, 520))
     game_over_img = load_img("pics/gameOverIcon.png", (500, 300))
@@ -149,6 +152,7 @@ def game_over_screen():
         pygame.display.flip()
 
 
+# Tutorial screen showing instructions and controls
 def tutorialScreen():
     screen.fill((255, 191, 0))
     brickWall_img = load_img("pics/BrickWall.png", (1130, 600))
@@ -253,6 +257,7 @@ def tutorialScreen():
         pygame.display.flip()
 
 
+# Global settings for sound/music volume, gender, map, and chosen toys
 soundsVolume = musicVolume = 100
 gen = "boy"
 place = 0
@@ -265,6 +270,7 @@ maps = [desertMap, forestMap, seaMap, candyWorldMap, moonMap, galaxyMap]
 chosen_map = maps[place]
 
 
+# Settings screen for adjusting sound/music, selecting character, map, and toys
 def settings_screen():
     global soundsVolume, musicVolume, gen, place, chosen_toys, maps, chosen_map
 
@@ -459,33 +465,7 @@ def settings_screen():
         pygame.display.flip()
 
 
-# def beforeRun():
-# font = get_font(50)
-# runBackground1 = run_bg
-# paths1 = paths_img
-# screen.blit(runBackground1,(0,0))
-# screen.blit(paths1,(260,0))
-# window = before_run_window
-# screen.blit(window, (0,0))
-# btn0 = pygame.draw.rect(screen, "orange", (300,380, 200,50),0,100)
-# btn1 = pygame.draw.rect(screen, "orange", (580,380, 200,50),0,100)
-# textBoy = font.render("ןב", True, "white")
-# textGirl = font.render("תב", True, "white")
-# screen.blit(textBoy, (370,380))
-# screen.blit(textGirl, (650,380))
-# while True:
-#     for event in pygame.event.get():
-#         if event.type == pygame.QUIT:
-#             pygame.quit()
-#         if event.type == pygame.MOUSEBUTTONDOWN:
-#             mouse_pos = pygame.mouse.get_pos()
-#             if btn0.collidepoint(mouse_pos):
-#                 runScreen(0)
-#             if btn1.collidepoint(mouse_pos):
-#                 runScreen(1)
-#     pygame.display.flip()
-
-
+# Helper to apply grayscale effect to a surface (used for "empty" hearts/resources)
 def apply_grayscale(surface):
     grayscale = pygame.Surface(surface.get_size()).convert_alpha()
     for y in range(surface.get_height()):
@@ -495,9 +475,13 @@ def apply_grayscale(surface):
             grayscale.set_at((x, y), (avg, avg, avg, pixel.a))
     return grayscale
 
+
+# Track food and toys collected during the run
 foodCount = 0  # Add this line at the start of runScreen
 toysCollected = 0  # Track collected toys
 
+
+# Main run screen (the runner game)
 def runScreen(gen):
     global y_1, y_2, lives, matsSpawned, matsCount, place, candyWorldrunMap, desertrunMap, forestrunMap, moonrunMap, searunMap, spacerunMap, candyWorldRunPath, desertRunPath, forestRunPath, moonRunPath, seaRunPath, spaceRunPath, woodSurface, foodCount, toysCollected
     runMaps = [
@@ -729,11 +713,13 @@ def runScreen(gen):
         pygame.display.flip()
 
 
+# Helper to load the correct base image for the given percentage
 def build(persentage):
     base = load_img(f"pics/Building_{persentage}-removebg-preview.png", (450, 450))
     return base
 
 
+# Base screen shown after the run, with animation and resource display
 def baseScreen():
     global matsCount, foodCount, toysCollected, woodSurface
     drama = drama_sound
@@ -756,23 +742,25 @@ def baseScreen():
         lose.play()
 
     comicBlueImg = load_img("pics/comic-bubble.png", (800, 800))
-    
+
     # Calculate center positions
     screen_width, screen_height = screen.get_size()
     comic_x = (screen_width - comicBlueImg.get_width()) // 0.7
     comic_y = (screen_height - comicBlueImg.get_height()) + comicBlueImg.get_height() // 2 - 40
-    
+
     base_final_x = (screen_width - current_base.get_width()) // 1.08
-    base_final_y = (screen_height - current_base.get_height()) + 100
+    base_final_y = (screen_height - current_base.get_height()) + 80
 
     # Center woodSurface
-    wood_x = 
-    wood_y = -35
+    woodSurface = load_img("pics/woodThickSurface.png", (640, 300))
+    wood_x = -20
+    wood_y = 50
 
     # Animation parameters
     base_start_y = screen_height  # Start from bottom of screen
     animation_steps = 60  # Number of animation frames
-    
+
+    imageBg = load_img("pics/Fortres_Background.jpg", (1080, 520))
     # Animate base sliding up from bottom
     for step in range(animation_steps):
         # Calculate current position (easing animation)
@@ -780,39 +768,30 @@ def baseScreen():
         eased_progress = 1 - (1 - progress) ** 3  # Ease out cubic
         current_y = base_start_y - (base_start_y - base_final_y) * eased_progress
         alpha = int(255 * progress)  # Fade in effect
-        
-        screen.fill((255, 191, 0))
+
+        screen.blit(imageBg, (0, 0))
+        screen.blit(woodSurface, (wood_x, wood_y))
         screen.blit(comicBlueImg, (comic_x, comic_y))
-        
+
         # Apply fade-in effect to base
         base_with_alpha = current_base.copy()
         base_with_alpha.set_alpha(alpha)
         screen.blit(base_with_alpha, (base_final_x, current_y))
-        
+
         pygame.display.flip()
         pygame.time.delay(30)  # Control animation speed
-    
-    matsStack = load_img("pics/miniStacks/matsStack.png", (20, 20))
-    foodStack = load_img("pics/miniStacks/foodStack.png", (20, 20))
-    toysStack = load_img("pics/miniStacks/toysStack.png", (20, 20))
+
+    matsStack = load_img("pics/miniStacks/matsStack.png", (40, 40))
+    foodStack = load_img("pics/miniStacks/foodStack.png", (40, 40))
+    toysStack = load_img("pics/miniStacks/toysStack.png", (40, 40))
     # Main loop after animation
     while True:
-        screen.fill((255, 191, 0))
+        screen.fill((255, 191, 0)) # nee to replace 2
+        screen.blit(imageBg, (0, 0))
         screen.blit(comicBlueImg, (comic_x, comic_y))
+        screen.blit(woodSurface, (wood_x, wood_y))
         screen.blit(current_base, (base_final_x, base_final_y))
 
-        screen.blit(woodSurface, (wood_x, wood_y))
-        
-        font = get_font(20)
-        needs = font.render(f":םירמוח", True, "white")
-        foodCheck = font.render(":ןוזמ", True, "white")
-        toysCheck = font.render(":םיעוצעצ", True, "white")
-        
-        # Center the text labels relative to woodSurface
-        screen.blit(needs, (wood_x + 180, 10))
-        screen.blit(foodCheck, (wood_x + 210, 55))
-        screen.blit(toysCheck, (wood_x + 165, 100))
-        
         grayMatsStack = apply_grayscale(matsStack)
         grayFoodStack = apply_grayscale(foodStack)
         grayToysStack = apply_grayscale(toysStack)
@@ -825,21 +804,23 @@ def baseScreen():
         toysCollectedStack = [toysStack] * toysCollected + [grayToysStack] * (
             3 - toysCollected
         )
-        spaceBetweenStacks = 20
-        
+        spaceBetweenStacks = 50
+
         # Center the resource stacks relative to woodSurface
         for i in range(10):
-            screen.blit(matsCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 30))
-            screen.blit(foodCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 75))
+            screen.blit(matsCollectedStack[i], (wood_x + 535 - i * spaceBetweenStacks, 100))
+            screen.blit(foodCollectedStack[i], (wood_x + 535 - i * spaceBetweenStacks, 150))
         for i in range(3):
-            screen.blit(toysCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 120))
-        
+            screen.blit(toysCollectedStack[i], (wood_x + 535 - i * spaceBetweenStacks, 200))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
 
         pygame.display.flip()
 
+
+# Test function for base screen (not used in main flow)
 def test():
     global matsCount
     drama = drama_sound
@@ -863,7 +844,7 @@ def test():
 
     comicBlueImg = load_img("pics/comic-bubble.png", (600, 200))
     while True:
-        screen.fill((255, 191, 0))
+        screen.fill((255, 191, 0)) # need to replace
         screen.blit(comicBlueImg, (325, 125))
         screen.blit(current_base, (325, 30))
 
@@ -874,6 +855,7 @@ def test():
         pygame.display.flip()
 
 
+# Main start screen with menu buttons
 def startScreen():
     global gen
     pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
@@ -971,11 +953,10 @@ def startScreen():
                         select_sound.play()
                         if btn["action"] == "לחתה":
                             start_music.stop()
-                            baseScreen()
-                            # if gen == "boy":
-                            #     runScreen(0)
-                            # else:
-                            #     runScreen(1)
+                            if gen == "boy":
+                                runScreen(0)
+                            else:
+                                runScreen(1)
                         elif btn["action"] == "תוארוה":
                             tutorialScreen()
                             pass
