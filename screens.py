@@ -64,7 +64,7 @@ def game_over_screen():
     btn_y = 300
     restart_rect = pygame.Rect(restart_x, btn_y, btn_width, btn_height)
     exit_rect = pygame.Rect(exit_x, btn_y, btn_width, btn_height)
-    
+
     woodBtn = load_img("pics/woodThickSurface.png", (btn_width, btn_height))
 
     # Draw woodBtn under the restart and exit buttons
@@ -94,8 +94,12 @@ def game_over_screen():
         restart_text_fade.set_alpha(alpha)
         exit_text_fade.set_alpha(alpha)
         # Center text on button
-        restart_text_rect = restart_text_fade.get_rect(center=(restart_x + btn_width // 2, btn_y + btn_height // 2))
-        exit_text_rect = exit_text_fade.get_rect(center=(exit_x + btn_width // 2, btn_y + btn_height // 2))
+        restart_text_rect = restart_text_fade.get_rect(
+            center=(restart_x + btn_width // 2, btn_y + btn_height // 2)
+        )
+        exit_text_rect = exit_text_fade.get_rect(
+            center=(exit_x + btn_width // 2, btn_y + btn_height // 2)
+        )
         screen.blit(restart_text_fade, restart_text_rect)
         screen.blit(exit_text_fade, exit_text_rect)
         pygame.display.flip()
@@ -106,8 +110,12 @@ def game_over_screen():
     screen.blit(woodBtn, (restart_x, btn_y))
     screen.blit(woodBtn, (exit_x, btn_y))
     # Center text on button
-    restart_text_rect = restart_text.get_rect(center=(restart_x + btn_width // 2, btn_y + btn_height // 2))
-    exit_text_rect = exit_text.get_rect(center=(exit_x + btn_width // 2, btn_y + btn_height // 2))
+    restart_text_rect = restart_text.get_rect(
+        center=(restart_x + btn_width // 2, btn_y + btn_height // 2)
+    )
+    exit_text_rect = exit_text.get_rect(
+        center=(exit_x + btn_width // 2, btn_y + btn_height // 2)
+    )
     screen.blit(restart_text, restart_text_rect)
     screen.blit(exit_text, exit_text_rect)
 
@@ -122,11 +130,12 @@ def game_over_screen():
                     select_sound.play()
                     # Reset all relevant game state variables before starting a new game
                     from state import y_1, y_2, lives, matsCount, matsSpawned
-                    globals()['y_1'] = 0
-                    globals()['y_2'] = -520
-                    globals()['lives'] = 3
-                    globals()['matsCount'] = 0
-                    globals()['matsSpawned'] = 0
+
+                    globals()["y_1"] = 0
+                    globals()["y_2"] = -520
+                    globals()["lives"] = 3
+                    globals()["matsCount"] = 0
+                    globals()["matsSpawned"] = 0
                     # If you have other persistent state, reset here as well
                     startScreen()
                     return
@@ -138,10 +147,6 @@ def game_over_screen():
             else:
                 pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
         pygame.display.flip()
-
-
-
-
 
 
 def tutorialScreen():
@@ -183,8 +188,6 @@ def tutorialScreen():
     toysSelectorImg = load_img("pics/tuturialPics/toysSelector.png", (180, 60))
     screen.blit(toysSelectorText, (760, 390))
     screen.blit(toysSelectorImg, (560, 370))
-
-
 
     miniTitle2 = load_img("pics/woodThickSurface.png", (150, 40))
     gameTutorialText = get_font(20).render("קחשמ", True, "white")
@@ -228,10 +231,9 @@ def tutorialScreen():
     matsMuiltiplier = EnglishFont.render("10X", True, "white")
     foodMuiltiplier = EnglishFont.render("10X", True, "white")
     toysMuiltiplier = EnglishFont.render("3X", True, "white")
-    screen.blit(matsMuiltiplier, (480-50, 407))
-    screen.blit(foodMuiltiplier, (350-50, 407))
-    screen.blit(toysMuiltiplier, (220-46, 407))
-
+    screen.blit(matsMuiltiplier, (480 - 50, 407))
+    screen.blit(foodMuiltiplier, (350 - 50, 407))
+    screen.blit(toysMuiltiplier, (220 - 46, 407))
 
     while True:
         for event in pygame.event.get():
@@ -247,8 +249,6 @@ def tutorialScreen():
                     select_sound.play()
                     startScreen()
                     return
-
-
 
         pygame.display.flip()
 
@@ -276,7 +276,6 @@ def settings_screen():
 
     woodSign = load_img("pics/titleWoodenSign.png", (300, 100))
     screen.blit(woodSign, (390, 37))
-
 
     font1 = get_font(50)
     settingsText = font1.render("תורדגה", True, "white")
@@ -460,7 +459,6 @@ def settings_screen():
         pygame.display.flip()
 
 
-
 # def beforeRun():
 # font = get_font(50)
 # runBackground1 = run_bg
@@ -497,9 +495,11 @@ def apply_grayscale(surface):
             grayscale.set_at((x, y), (avg, avg, avg, pixel.a))
     return grayscale
 
+foodCount = 0  # Add this line at the start of runScreen
+toysCollected = 0  # Track collected toys
 
 def runScreen(gen):
-    global y_1, y_2, lives, matsSpawned, matsCount, place, candyWorldrunMap, desertrunMap, forestrunMap, moonrunMap, searunMap, spacerunMap, candyWorldRunPath, desertRunPath, forestRunPath, moonRunPath, seaRunPath, spaceRunPath, woodSurface
+    global y_1, y_2, lives, matsSpawned, matsCount, place, candyWorldrunMap, desertrunMap, forestrunMap, moonrunMap, searunMap, spacerunMap, candyWorldRunPath, desertRunPath, forestRunPath, moonRunPath, seaRunPath, spaceRunPath, woodSurface, foodCount, toysCollected
     runMaps = [
         desertrunMap,
         forestrunMap,
@@ -517,8 +517,6 @@ def runScreen(gen):
         spaceRunPath,
     ]
 
-    foodCount = 0  # Add this line at the start of runScreen
-    toysCollected = 0  # Track collected toys
     summoned_toys = set()  # Track which toys have been summoned
     go_sound.play()
     bgMusic = bg_run_music
@@ -611,8 +609,8 @@ def runScreen(gen):
 
     def colideHappen(rightX):
         global lives, matsCount
-        nonlocal foodCount
-        nonlocal toysCollected
+        global foodCount
+        global toysCollected
         for item in items_pos:
             if item[0] == rightX and item[1] < 480 and item[1] > 520 - 250:
                 items_pos.remove(item)
@@ -632,9 +630,9 @@ def runScreen(gen):
                     collectSound.play()
                     toysCollected = min(toysCollected + 1, 3)
 
-    matsStack = load_img("pics/miniStacks/matsStack.png", (20,20))
-    foodStack = load_img("pics/miniStacks/foodStack.png", (20,20))
-    toysStack = load_img("pics/miniStacks/toysStack.png", (20,20))
+    matsStack = load_img("pics/miniStacks/matsStack.png", (20, 20))
+    foodStack = load_img("pics/miniStacks/foodStack.png", (20, 20))
+    toysStack = load_img("pics/miniStacks/toysStack.png", (20, 20))
     while True:
         time += 1
         screen.blit(runBackground1, (0, 0))
@@ -658,15 +656,22 @@ def runScreen(gen):
         grayMatsStack = apply_grayscale(matsStack)
         grayFoodStack = apply_grayscale(foodStack)
         grayToysStack = apply_grayscale(toysStack)
-        matsCollectedStack = [matsStack] * matsCount + [grayMatsStack] * (10 - matsCount)
-        foodCollectedStack = [foodStack] * foodCount + [grayFoodStack] * (10 - foodCount)
-        toysCollectedStack = [toysStack] * toysCollected + [grayToysStack] * (3 - toysCollected)
+        matsCollectedStack = [matsStack] * matsCount + [grayMatsStack] * (
+            10 - matsCount
+        )
+        foodCollectedStack = [foodStack] * foodCount + [grayFoodStack] * (
+            10 - foodCount
+        )
+        toysCollectedStack = [toysStack] * toysCollected + [grayToysStack] * (
+            3 - toysCollected
+        )
         spaceBetweenStacks = 20
         for i in range(10):
             screen.blit(matsCollectedStack[i], (1050 - i * spaceBetweenStacks, 30))
             screen.blit(foodCollectedStack[i], (1050 - i * spaceBetweenStacks, 75))
         for i in range(3):
             screen.blit(toysCollectedStack[i], (1050 - i * spaceBetweenStacks, 120))
+
         y_1 += 2
         y_2 += 2
         if y_1 >= 520:
@@ -725,11 +730,117 @@ def runScreen(gen):
 
 
 def build(persentage):
-    base = load_img(f"pics/Building_{persentage}%.png", (450, 450))
+    base = load_img(f"pics/Building_{persentage}-removebg-preview.png", (450, 450))
     return base
 
 
 def baseScreen():
+    global matsCount, foodCount, toysCollected, woodSurface
+    drama = drama_sound
+    drama.play()
+    Win = win_sound
+    lose = lose_sound
+    p = (
+        25
+        if 0 <= matsCount < 3
+        else 50 if 2 < matsCount < 6 else 75 if 5 < matsCount < 10 else 100
+    )
+    pygame.time.delay(1000)
+    bgPic = fortress_bg
+
+    current_base = build(p)
+
+    if p >= 75:
+        Win.play()
+    else:
+        lose.play()
+
+    comicBlueImg = load_img("pics/comic-bubble.png", (800, 800))
+    
+    # Calculate center positions
+    screen_width, screen_height = screen.get_size()
+    comic_x = (screen_width - comicBlueImg.get_width()) // 0.7
+    comic_y = (screen_height - comicBlueImg.get_height()) + comicBlueImg.get_height() // 2 - 40
+    
+    base_final_x = (screen_width - current_base.get_width()) // 1.08
+    base_final_y = (screen_height - current_base.get_height()) + 100
+
+    # Center woodSurface
+    wood_x = 
+    wood_y = -35
+
+    # Animation parameters
+    base_start_y = screen_height  # Start from bottom of screen
+    animation_steps = 60  # Number of animation frames
+    
+    # Animate base sliding up from bottom
+    for step in range(animation_steps):
+        # Calculate current position (easing animation)
+        progress = step / animation_steps
+        eased_progress = 1 - (1 - progress) ** 3  # Ease out cubic
+        current_y = base_start_y - (base_start_y - base_final_y) * eased_progress
+        alpha = int(255 * progress)  # Fade in effect
+        
+        screen.fill((255, 191, 0))
+        screen.blit(comicBlueImg, (comic_x, comic_y))
+        
+        # Apply fade-in effect to base
+        base_with_alpha = current_base.copy()
+        base_with_alpha.set_alpha(alpha)
+        screen.blit(base_with_alpha, (base_final_x, current_y))
+        
+        pygame.display.flip()
+        pygame.time.delay(30)  # Control animation speed
+    
+    matsStack = load_img("pics/miniStacks/matsStack.png", (20, 20))
+    foodStack = load_img("pics/miniStacks/foodStack.png", (20, 20))
+    toysStack = load_img("pics/miniStacks/toysStack.png", (20, 20))
+    # Main loop after animation
+    while True:
+        screen.fill((255, 191, 0))
+        screen.blit(comicBlueImg, (comic_x, comic_y))
+        screen.blit(current_base, (base_final_x, base_final_y))
+
+        screen.blit(woodSurface, (wood_x, wood_y))
+        
+        font = get_font(20)
+        needs = font.render(f":םירמוח", True, "white")
+        foodCheck = font.render(":ןוזמ", True, "white")
+        toysCheck = font.render(":םיעוצעצ", True, "white")
+        
+        # Center the text labels relative to woodSurface
+        screen.blit(needs, (wood_x + 180, 10))
+        screen.blit(foodCheck, (wood_x + 210, 55))
+        screen.blit(toysCheck, (wood_x + 165, 100))
+        
+        grayMatsStack = apply_grayscale(matsStack)
+        grayFoodStack = apply_grayscale(foodStack)
+        grayToysStack = apply_grayscale(toysStack)
+        matsCollectedStack = [matsStack] * matsCount + [grayMatsStack] * (
+            10 - matsCount
+        )
+        foodCollectedStack = [foodStack] * foodCount + [grayFoodStack] * (
+            10 - foodCount
+        )
+        toysCollectedStack = [toysStack] * toysCollected + [grayToysStack] * (
+            3 - toysCollected
+        )
+        spaceBetweenStacks = 20
+        
+        # Center the resource stacks relative to woodSurface
+        for i in range(10):
+            screen.blit(matsCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 30))
+            screen.blit(foodCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 75))
+        for i in range(3):
+            screen.blit(toysCollectedStack[i], (wood_x + 230 - i * spaceBetweenStacks, 120))
+        
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+
+        pygame.display.flip()
+
+def test():
     global matsCount
     drama = drama_sound
     drama.play()
@@ -740,39 +851,26 @@ def baseScreen():
         if 0 <= matsCount < 3
         else 50 if 2 < matsCount < 6 else 75 if 5 < matsCount < 10 else 100
     )
-    font = get_font(20)
-    text1 = font.render(f"םלש {p}% אוה ךלש רצבמה", True, "darkred")
-    ans = "תחצינ!" if p >= 75 else "...תדספה"
-    text2 = font.render(ans, True, "darkred")
     pygame.time.delay(1000)
     bgPic = fortress_bg
+
     current_base = build(p)
-    dust = dust_img
-    buildSound = build_sound
-    buildSound.play()
-    for i in range(11):
-        screen.blit(bgPic, (0, 0))
-        dust = pygame.transform.scale(dust, (600, 600))
-        screen.blit(dust, (220, -20))
-        pygame.time.delay(300)
-        pygame.display.flip()
-        screen.blit(bgPic, (0, 0))
-        dust = pygame.transform.scale(dust, (650, 650))
-        screen.blit(dust, (200, -35))
-        pygame.time.delay(300)
-        pygame.display.flip()
+
     if p >= 75:
         Win.play()
     else:
         lose.play()
+
+    comicBlueImg = load_img("pics/comic-bubble.png", (600, 200))
     while True:
-        screen.blit(bgPic, (0, 0))
+        screen.fill((255, 191, 0))
+        screen.blit(comicBlueImg, (325, 125))
         screen.blit(current_base, (325, 30))
-        screen.blit(text1, (750, 40))
-        screen.blit(text2, (250, 40))
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
+
         pygame.display.flip()
 
 
@@ -809,7 +907,7 @@ def startScreen():
     pillar_img = load_img("pics/woodThickSurface.png", (100, 500))
     pillar_img = pygame.transform.rotate(pillar_img, 180)  # Rotate the pillar image
     pillar_x, pillar_y = 850, 100
-    screen.blit(pillar_img, (pillar_x-10, pillar_y))
+    screen.blit(pillar_img, (pillar_x - 10, pillar_y))
 
     # Set arrow sizes with requested width increases
     woodenArrow1 = load_img("pics/woodenArrow1.png", (310, 80))
@@ -824,14 +922,21 @@ def startScreen():
     arrow_imgs = [woodenArrow1, woodenArrow2, woodenArrow3, woodenArrow4]
     arrow_widths = [img.get_width() for img in arrow_imgs]
     arrow_heights = [img.get_height() for img in arrow_imgs]
-    arrow_ys = [140, 210, 280, 360]  # Adjusted for higher arrows and last arrow's height
+    arrow_ys = [
+        140,
+        210,
+        280,
+        360,
+    ]  # Adjusted for higher arrows and last arrow's height
     btn_texts = ["לחתה", "תוארוה", "תורדגה", "האיצי"]
     font_buttons = get_font(32)
     arrow_btns = []
 
     for i in range(4):
         # Center each arrow on the pillar (pillar_x-10 for pillar image offset)
-        arrow_x = (pillar_x-10) + (pillar_img.get_width() // 2) - (arrow_widths[i] // 2)
+        arrow_x = (
+            (pillar_x - 10) + (pillar_img.get_width() // 2) - (arrow_widths[i] // 2)
+        )
         arrow_y = arrow_ys[i]
         # Make the rect smaller than the arrow image (e.g. 75% width, 60% height, centered)
         rect_w = int(arrow_widths[i] * 0.75)
@@ -866,10 +971,11 @@ def startScreen():
                         select_sound.play()
                         if btn["action"] == "לחתה":
                             start_music.stop()
-                            if gen == "boy":
-                                runScreen(0)
-                            else:
-                                runScreen(1)
+                            baseScreen()
+                            # if gen == "boy":
+                            #     runScreen(0)
+                            # else:
+                            #     runScreen(1)
                         elif btn["action"] == "תוארוה":
                             tutorialScreen()
                             pass
