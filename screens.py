@@ -52,12 +52,93 @@ import random
 
 
 def game_over_screen():
-    font = get_font(300)
-    gameOverText = font.render("תלספנ", True, "darkred")
-    screen.blit(gameOverText, (50, 120))
-    pygame.display.flip()
-    pygame.time.delay(4000)
-    exit_game()
+    surcafe = load_img("pics/woodSurface.png", (1080, 520))
+    game_over_img = load_img("pics/gameOverIcon.png", (500, 300))
+    screen.blit(surcafe, (0, 0))
+
+    # Make the buttons a bit bigger and move them closer to the center
+    btn_width = 350
+    btn_height = 100
+    restart_x = 200
+    exit_x = 565
+    btn_y = 300
+    restart_rect = pygame.Rect(restart_x, btn_y, btn_width, btn_height)
+    exit_rect = pygame.Rect(exit_x, btn_y, btn_width, btn_height)
+    
+    woodBtn = load_img("pics/woodThickSurface.png", (btn_width, btn_height))
+
+    # Draw woodBtn under the restart and exit buttons
+    screen.blit(woodBtn, (restart_x, btn_y))
+    screen.blit(woodBtn, (exit_x, btn_y))
+
+    # Prepare text surfaces for fade-in
+    font_btn = get_font(36)
+    restart_text = font_btn.render("שדחמ קחשמ", True, (255, 255, 255))
+    exit_text = font_btn.render("האיצי", True, (255, 255, 255))
+
+    # Fade in game_over_img, buttons, and texts together
+    fade_surface = game_over_img.copy()
+    restart_btn_fade = woodBtn.copy()
+    exit_btn_fade = woodBtn.copy()
+    restart_text_fade = restart_text.copy()
+    exit_text_fade = exit_text.copy()
+
+    for alpha in range(0, 256, 10):
+        screen.blit(surcafe, (0, 0))
+        fade_surface.set_alpha(alpha)
+        screen.blit(fade_surface, (290, 0))
+        restart_btn_fade.set_alpha(alpha)
+        exit_btn_fade.set_alpha(alpha)
+        screen.blit(restart_btn_fade, (restart_x, btn_y))
+        screen.blit(exit_btn_fade, (exit_x, btn_y))
+        restart_text_fade.set_alpha(alpha)
+        exit_text_fade.set_alpha(alpha)
+        # Center text on button
+        restart_text_rect = restart_text_fade.get_rect(center=(restart_x + btn_width // 2, btn_y + btn_height // 2))
+        exit_text_rect = exit_text_fade.get_rect(center=(exit_x + btn_width // 2, btn_y + btn_height // 2))
+        screen.blit(restart_text_fade, restart_text_rect)
+        screen.blit(exit_text_fade, exit_text_rect)
+        pygame.display.flip()
+        pygame.time.delay(20)
+
+    # Draw final state after fade-in
+    screen.blit(game_over_img, (290, 0))
+    screen.blit(woodBtn, (restart_x, btn_y))
+    screen.blit(woodBtn, (exit_x, btn_y))
+    # Center text on button
+    restart_text_rect = restart_text.get_rect(center=(restart_x + btn_width // 2, btn_y + btn_height // 2))
+    exit_text_rect = exit_text.get_rect(center=(exit_x + btn_width // 2, btn_y + btn_height // 2))
+    screen.blit(restart_text, restart_text_rect)
+    screen.blit(exit_text, exit_text_rect)
+
+    while True:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                exit_game()
+            mouse_pos = pygame.mouse.get_pos()
+            if restart_rect.collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    select_sound.play()
+                    # Reset all relevant game state variables before starting a new game
+                    from state import y_1, y_2, lives, matsCount, matsSpawned
+                    globals()['y_1'] = 0
+                    globals()['y_2'] = -520
+                    globals()['lives'] = 3
+                    globals()['matsCount'] = 0
+                    globals()['matsSpawned'] = 0
+                    # If you have other persistent state, reset here as well
+                    startScreen()
+                    return
+            elif exit_rect.collidepoint(mouse_pos):
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_HAND)
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    select_sound.play()
+                    exit_game()
+            else:
+                pygame.mouse.set_cursor(pygame.SYSTEM_CURSOR_ARROW)
+        pygame.display.flip()
+
 
 
 
@@ -633,6 +714,7 @@ def runScreen(gen):
             bgMusic.stop()
             lose.play()
             game_over_screen()
+            return
         if x_player == 285:
             colideHappen(285)
         elif x_player == 485:
